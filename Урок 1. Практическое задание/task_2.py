@@ -15,3 +15,28 @@
 -- каждый из двух алгоритмов нужно оформить в виде отдельной ф-ции
 -- проставьте сложности каждого выражения в двух ваших алгоритмах
 """
+
+
+def selection_sort(lst_in: list):
+    """Сортировка списка выбором.
+
+    Сложность: O(n^2).
+    """
+    for i in range(len(lst_in) - 1):  # O(n)
+        for j in range(i + 1, len(lst_in)):  # O(n)
+            if lst_in[j] < lst_in[i]:  # O(n)
+                lst_in[j], lst_in[i] = lst_in[i], lst_in[j]  # O(1)
+
+    return lst_in  # O(1)
+
+
+def sum_odd(lst_in: list):
+    """Возвращает сумму нечетных чисел из списка целых чисел
+
+    Сложность: O(n).
+    """
+    sum_odd = 0             # O(1)
+    for i in lst_in:        # O(n)
+        if i % 2 != 0:      # O(n)
+            sum_odd += i    # O(1)
+    return sum_odd          # O(1)

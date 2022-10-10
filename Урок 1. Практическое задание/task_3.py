@@ -17,3 +17,34 @@
 Примечание: ПРОШУ ВАС ВНИМАТЕЛЬНО ЧИТАТЬ ЗАДАНИЕ!
 """
 
+companies = {"Рога и копыта": 1000000, "Apple": 2123214124, "Газпром": 12435772, "Sony": 56999992, "Nokia": 789322}
+
+
+def sorted_companies1(companies: dict):
+    """Возвращает словарь из 3-х компаний с наибольшей годовой прибылью
+
+    Сложность: O(n log n).
+    """
+    companies_tuple = sorted(companies.items(), key=lambda item: item[1], reverse=True)  # O(n log n)
+    sorted_companies = dict(companies_tuple[:3])  # O(1), т.к. мы берем только 3 значения.
+    return sorted_companies  # O(1)
+
+
+def sorted_companies2(companies: dict):
+    """Возвращает словарь из 3-х компаний с наибольшей годовой прибылью
+
+    Сложность: O(n^2).
+    """
+    lst_values = [v for v in companies.values()]  # O(n)
+    for i in range(len(lst_values) - 1):  # O(n)
+        for j in range(i + 1, len(lst_values)):  # O(n)
+            if lst_values[j] > lst_values[i]:  # O(1)
+                lst_values[j], lst_values[i] = lst_values[i], lst_values[j]  # O(1)
+
+    res = {k: v for k, v in companies.items() if v in lst_values[:3]}  # O(n)
+    return res  # O(1)
+
+
+""" Функция sorted_companies1 ищет 3 компании с наибольшей годовой прибылью с алгоритмической сложностью O(n log n),
+    что является более эффективным алгоритмом чем O(n^2)
+"""
