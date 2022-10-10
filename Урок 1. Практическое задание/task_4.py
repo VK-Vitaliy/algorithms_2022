@@ -36,7 +36,7 @@ def authentication_1(login, pas):
         else:  # O(1)
             print('Вам нужно активировать учетную запись')  # O(1)
     else:  # O(1)
-        print('Пользователь с таким логином не зарегистрирован')  # O(1)
+        print('Пользователь с таким логином не зарегистрирован.')  # O(1)
 
 
 def authentication_2(login, pas):
@@ -44,11 +44,28 @@ def authentication_2(login, pas):
 
        Сложность: O(n^2)
     """
-    for i in users.keys():                          # O(n)
-        if i == login:                              # O(1)
-            for v in users.values():                # O(n)
+    for i in users.keys():  # O(n)
+        if i == login:  # O(1)
+            for v in users.values():  # O(n)
                 if str(v[0]) == pas and v[1] == 1:  # O(1)
-                    print('Добро пожаловать!')      # O(1)
+                    print('Добро пожаловать!')  # O(1)
+
+
+def authentication_3(login, pas):
+    """
+
+    Сложность: O(1)
+    """
+    try:  # O(1)
+        if str(users.get(login)[0]) == pas:  # O(1)
+            if users[login][1] == 1:  # O(1)
+                print('Добро пожаловать!')  # O(1)
+            else:  # O(1)
+                print('Вам нужно активировать учетную запись')  # O(1)
+        else:  # O(1)
+            print('Введен невереный пароль.')  # O(1)
+    except TypeError:  # O(1)
+        print('Пользователь с таким логином не зарегистрирован.')  # O(1)
 
 
 if __name__ == '__main__':
@@ -56,8 +73,8 @@ if __name__ == '__main__':
     password = input('Введите Ваш Пароль: ')
     authentication_1(login, password)
     authentication_2(login, password)
+    authentication_3(login, password)
 
-
-""" Функция authentication_1 проверят активацию учетной записи с алгоритмической сложностью O(n),
-    что является более эффективным алгоритмом чем O(n^2)
+""" Функция authentication_3 проверят активацию учетной записи с алгоритмической сложностью O(1),
+    что является более эффективным алгоритмом чем O(n^2) и O(n)
 """

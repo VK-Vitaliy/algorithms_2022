@@ -38,7 +38,7 @@ def sorted_companies2(companies: dict):
     lst_values = [v for v in companies.values()]  # O(n)
     for i in range(len(lst_values) - 1):  # O(n)
         for j in range(i + 1, len(lst_values)):  # O(n)
-            if lst_values[j] > lst_values[i]:  # O(n)
+            if lst_values[j] > lst_values[i]:  # O(1)
                 lst_values[j], lst_values[i] = lst_values[i], lst_values[j]  # O(1)
 
     res = {k: v for k, v in companies.items() if v in lst_values[:3]}  # O(n)
