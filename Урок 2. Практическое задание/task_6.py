@@ -7,3 +7,24 @@
 
 Решите через рекурсию. В задании нельзя применять циклы.
 """
+from random import randint
+
+
+def find_random_number(n=randint(0, 100), attempt=10):
+    choice = int(input("Угадай число? "))
+    if attempt == 0:
+        print(n)
+        return
+    if choice > n:
+        print("Ваше число больше загаданного!")
+        attempt -= 1
+    elif choice < n:
+        print("Ваше число меньше загаданного!")
+        attempt -= 1
+    else:
+        print("Вы угадали, победа!")
+        return
+    find_random_number(n, attempt)
+
+
+find_random_number()

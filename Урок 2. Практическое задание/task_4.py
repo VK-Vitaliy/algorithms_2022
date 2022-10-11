@@ -10,3 +10,16 @@
 Решите через рекурсию. В задании нельзя применять циклы.
 Нужно обойтисть без создания массива!
 """
+
+
+def adding_numbers(n, sum_numbers=0, start_num=1):
+    if n == 0:
+        return sum_numbers
+    else:
+        sum_numbers += start_num
+        start_num = start_num / -2
+        n -= 1
+        return adding_numbers(n, sum_numbers, start_num)
+
+
+print(adding_numbers(int(input('Введите количество элементов: '))))
