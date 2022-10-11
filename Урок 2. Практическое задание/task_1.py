@@ -27,3 +27,29 @@
 Вы вместо трехзначного числа ввели строку (((. Исправьтесь
 Введите операцию (+, -, *, / или 0 для выхода):
 """
+from operator import sub, add, truediv, mul
+
+
+def calculated():
+    operators = {'-': sub, '+': add, '/': truediv, '*': mul}
+    mode = input("Введите операцию (+, -, *, / или 0 для выхода): ")
+    if mode == "0":
+        return
+    try:
+        if mode not in ("-", "+", "/", "*", "0"):
+            raise KeyError
+        else:
+            a = int(input("Введите первое число: "))
+            b = int(input("Введите второе число: "))
+            print(f"Ваш результат {operators[mode](a, b)}")
+    except KeyError:
+        print("Вы ввели не верный оператор.")
+    except ValueError:
+        print("Вы вместо трехзначного числа ввели строку (((. Исправьтесь")
+    except ZeroDivisionError:
+        print("На ноль делить нельзя!")
+    finally:
+        calculated()
+
+
+calculated()

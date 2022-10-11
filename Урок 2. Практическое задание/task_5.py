@@ -19,3 +19,21 @@
 
 Допускается исп-е встроенных ф-ций
 """
+
+
+def get_ascii_table(number=32, stack=10):
+    if number == 128:
+        return
+    else:
+        if stack == 1:
+            print(number, chr(number), sep=' - ')
+            stack = 10
+        else:
+            print(number, chr(number), sep=' - ', end=' ')
+            stack -= 1
+        number += 1
+    get_ascii_table(number, stack)
+
+
+get_ascii_table()
+

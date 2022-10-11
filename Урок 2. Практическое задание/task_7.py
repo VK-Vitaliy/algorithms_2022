@@ -13,3 +13,16 @@
 
 Решите через рекурсию. В задании нельзя применять циклы.
 """
+
+
+def get_sum(num, summ=0):
+    if num < 0:
+        return summ
+    else:
+        summ += num
+        num -= 1
+    return get_sum(num, summ)
+
+
+n = int(input("Введите простое натуральное число: "))
+print(get_sum(n) == n * (n + 1) / 2)
