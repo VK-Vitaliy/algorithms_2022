@@ -15,3 +15,30 @@
 и одного из алгоритмов, например, sha512
 Можете усложнить задачу, реализовав ее через ООП
 """
+import hashlib
+from os import urandom
+
+url_cache = dict()
+
+
+class UrlCache:
+    SALT = urandom(16)
+
+    def __init__(self):
+        self.__url_cache = dict()
+
+    def check_cache(self, url: str):
+        return self.__url_cache.setdefault(url, hashlib.sha512(self.SALT + url.encode('utf-8')).hexdigest())
+
+    @property
+    def url_cache(self):
+        return self.__url_cache
+
+
+cache = UrlCache()
+cache.check_cache('https://gb.ru/')
+cache.check_cache('https://gb.ru/')
+cache.check_cache('https://stepik.org/learn')
+cache.check_cache('https://lms.metaclass.kts.studio/courses')
+print(cache.url_cache)
+
