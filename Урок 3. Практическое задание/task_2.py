@@ -23,29 +23,58 @@ f1dcaeeafeb855965535d77c55782349444b
 п.с. статья на Хабре - python db-api
 """
 import hashlib
-import sqlite3
-
-conn = sqlite3.connect("mydatabase.db")
-cursor = conn.cursor()
-cursor.execute("DROP TABLE if exists users")
-cursor.execute("""CREATE TABLE if not exists users (login text, password text)
-               """)
-conn.commit()
+from os.path import join, dirname
+from sqlite3 import connect, OperationalError, IntegrityError
 
 
-def check_pass():
-    login = input("Введите логин: ")
-    password = input("Введите пароль: ")
-    hash_res = hashlib.sha256(login.encode("utf-8") + password.encode("utf-8")).hexdigest()
-    print(f"В базе данных хранится строка: {hash_res}")
-    cursor.execute("INSERT INTO users VALUES(?, ?);", (login, hash_res))
-    conn.commit()
-    password = input("Введите пароль еще раз для проверки: ")
-    cursor.execute("SELECT * FROM users where login=?;", [login])
-    hash_res2 = hashlib.sha256(login.encode("utf-8") + password.encode("utf-8")).hexdigest()
-    res = cursor.fetchall()
-    print("Вы ввели правильный пароль." if hash_res2 == res[0][1] else "Вы ввели не правильный пароль.")
+class HashClass:
+    def __init__(self):
+        self.db_obj = join(dirname(__file__), "mydatabase.db")
+        self.conn = connect(self.db_obj)
+        self.cursor = self.conn.cursor()
+
+    def create_table(self):
+        create_stmt = "CREATE TABLE users (user_login varchar(255) unique, user_password varchar(255))"
+
+        try:
+            self.cursor.execute(create_stmt)
+        except OperationalError:
+            print("Таблица уже существует. Не добавляем.")
+        else:
+            self.conn.commit()
+            print("Операция прошла успешно. Таблица 'users' добавлена в БД.")
+
+    @staticmethod
+    def get_hash():
+        login = input("Введите логин: ")
+        password = input("Введите пароль: ")
+        hash_obj = hashlib.sha256(login.encode() + password.encode()).hexdigest()
+        return login, hash_obj
+
+    def register(self):
+        login, reg_hash = self.get_hash()
+        insert_stmt = "INSERT INTO users (user_login, user_password) VALUES (?, ?)"
+        user_info = (login, reg_hash)
+        try:
+            self.cursor.execute(insert_stmt, user_info)
+        except IntegrityError:
+            print("Такой login уже зарегистрирован, выполните вход.")
+        else:
+            self.conn.commit()
+            print("Операция прошла успешно. Вы зарегистрировались.")
+
+    def log_in(self):
+        login, check_hash = self.get_hash()
+        select_stmt = "SELECT user_password FROM users WHERE user_login = ?"
+        self.cursor.execute(select_stmt, (login,))
+        out_hash = self.cursor.fetchone()
+        if check_hash == out_hash[0]:
+            print("Вы ввели правильный пароль.")
+        else:
+            print("Вы ввели не правильный логин или пароль.")
 
 
-check_pass()
-conn.close()
+network = HashClass()
+network.create_table()
+network.register()
+network.log_in()
