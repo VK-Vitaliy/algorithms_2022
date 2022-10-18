@@ -80,3 +80,24 @@ print(
         'recursive_reverse_mem(num_10000)',
         setup='from __main__ import recursive_reverse_mem, num_10000',
         number=10000))
+
+"""
+Полагаю, что оптимизированная функция показывает не верные замеры, т.к. входные параметры одни и те же, а значит
+cache заполняется один раз и последующие прогоны функции, уже берут данные из кэша, а не делаются расчеты заново.
+Если запустить замер одного выполнения функции, то мы увидим что время выполнения у оптимизированной функции выше в 2
+раза, чем у не оптимизированной, за счет того что оптимизированная функция тратит время на заполнение cache.
+"""
+
+print('Не оптимизированная функция recursive_reverse')
+print(
+    timeit(
+        "recursive_reverse(num_1000)",
+        setup='from __main__ import recursive_reverse, num_1000',
+        number=1))
+
+print('Оптимизированная функция recursive_reverse_mem')
+print(
+    timeit(
+        'recursive_reverse_mem(num_1000)',
+        setup='from __main__ import recursive_reverse_mem, num_1000',
+        number=1))
