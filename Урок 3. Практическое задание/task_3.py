@@ -22,3 +22,13 @@
 р
 а
 """
+import hashlib
+
+ex = 'papa'
+res = set()
+for i in range(len(ex)):
+    for j in range(i + 1, len(ex) + 1):
+        if ex[i:j] != ex:
+            res.add(hashlib.sha256(ex[i:j].encode("utf-8")).hexdigest())
+
+print(len(res))

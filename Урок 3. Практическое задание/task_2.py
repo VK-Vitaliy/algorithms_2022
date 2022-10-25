@@ -22,3 +22,59 @@ f1dcaeeafeb855965535d77c55782349444b
 воспользуйтесь базой данный sqlite, postgres и т.д.
 п.с. статья на Хабре - python db-api
 """
+import hashlib
+from os.path import join, dirname
+from sqlite3 import connect, OperationalError, IntegrityError
+
+
+class HashClass:
+    def __init__(self):
+        self.db_obj = join(dirname(__file__), "mydatabase.db")
+        self.conn = connect(self.db_obj)
+        self.cursor = self.conn.cursor()
+
+    def create_table(self):
+        create_stmt = "CREATE TABLE users (user_login varchar(255) unique, user_password varchar(255))"
+
+        try:
+            self.cursor.execute(create_stmt)
+        except OperationalError:
+            print("Таблица уже существует. Не добавляем.")
+        else:
+            self.conn.commit()
+            print("Операция прошла успешно. Таблица 'users' добавлена в БД.")
+
+    @staticmethod
+    def get_hash():
+        login = input("Введите логин: ")
+        password = input("Введите пароль: ")
+        hash_obj = hashlib.sha256(login.encode() + password.encode()).hexdigest()
+        return login, hash_obj
+
+    def register(self):
+        login, reg_hash = self.get_hash()
+        insert_stmt = "INSERT INTO users (user_login, user_password) VALUES (?, ?)"
+        user_info = (login, reg_hash)
+        try:
+            self.cursor.execute(insert_stmt, user_info)
+        except IntegrityError:
+            print("Такой login уже зарегистрирован, выполните вход.")
+        else:
+            self.conn.commit()
+            print("Операция прошла успешно. Вы зарегистрировались.")
+
+    def log_in(self):
+        login, check_hash = self.get_hash()
+        select_stmt = "SELECT user_password FROM users WHERE user_login = ?"
+        self.cursor.execute(select_stmt, (login,))
+        out_hash = self.cursor.fetchone()
+        if check_hash == out_hash[0]:
+            print("Вы ввели правильный пароль.")
+        else:
+            print("Вы ввели не правильный логин или пароль.")
+
+
+network = HashClass()
+network.create_table()
+network.register()
+network.log_in()
