@@ -25,9 +25,9 @@ __mul__
 __add__
 """
 import collections
-UsersNums = collections.namedtuple("UsersNums", ["n1", "n2"])
+users_nums = collections.namedtuple("UsersNums", ["n1", "n2"])
 print("Программа сложения и умножения двух шестнадцатеричных чисел")
-values = UsersNums(n1=(input("Введите первое число: ")), n2=(input("Введите второе число: ")))
+values = users_nums(n1=(input("Введите первое число: ")), n2=(input("Введите второе число: ")))
 nums1_lst = list(values.n1)
 nums2_lst = list(values.n2)
 add_res = list(str((hex(int(values.n1, 16) + int(values.n2, 16)))).upper())[2:]
