@@ -30,3 +30,51 @@
 
 Это файл для четвертого скрипта
 """
+
+"""
+Задание с курса "Основы языка Python".
+Объявляется функция, которая принимает строку и заключает ее в указанный тег.
+"""
+from memory_profiler import memory_usage
+
+
+def decor(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(args[0])
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        return res, mem_diff
+
+    return wrapper
+
+
+# Исходное решение
+@decor
+def get_tag1(a, tag='h1', up=True):
+    if up == True:
+        return "<" + tag.upper() + ">" + a + "</" + tag.upper() + ">"
+    else:
+        return "<" + tag + ">" + a + "</" + tag + ">"
+
+
+# Оптимизированное решение с использованием f-строк
+@decor
+def get_tag2(a, tag='h1', up=True):
+    return (f"<{tag}>{a}</{tag}>", f"<{tag.upper()}>{a}</{tag.upper()}>")[up]
+
+
+s = "Python is best!"
+
+res1, mem_diff1 = get_tag1(s, 'div', False)
+print(f"Выполнение заняло {mem_diff1} Mib")
+
+res2, mem_diff2 = get_tag2(s, 'div', False)
+print(f"Выполнение заняло {mem_diff2} Mib")
+
+"""
+Аналитика:
+Для оптимизации памяти я использовал f-строку, в результате чего удалось добиться уменьшения расхода памяти
+Исходное решение (Выполнение заняло 0.015625 Mib)
+Оптимизированное решение (Выполнение заняло 0.0 Mib)
+"""

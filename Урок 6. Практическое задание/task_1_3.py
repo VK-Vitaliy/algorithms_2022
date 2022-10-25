@@ -30,3 +30,53 @@
 
 Это файл для третьего скрипта
 """
+"""
+Задание с курса "Основы языка Python".
+Вводится список целых чисел. Необходимо оставить в нем только двузначные числа.
+"""
+import random
+
+from memory_profiler import memory_usage
+
+
+def memory(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(*args)
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        print(f"Выполнение заняло {mem_diff} Mib")
+        return res
+
+    return wrapper
+
+
+lst_in = [random.randrange(-100, 200) for i in range(5000000)]
+
+
+# Исходное решение
+@memory
+def func1(lst_in):
+    res = []
+    for i in lst_in:
+        if 9 < abs(i) < 100:
+            res.append(i)
+    return res
+
+
+# Оптимизированное решение c filter
+@memory
+def func2(lst_in):
+    res = filter(lambda x: 9 < abs(x) < 100, lst_in)
+    return res
+
+
+func1(lst_in)
+func2(lst_in)
+
+"""
+Аналитика:
+Для оптимизации памяти я использовал функцию filter, в результате чего удалось добиться уменьшения расхода памяти
+Исходное решение (Выполнение заняло 21.81640625 Mib)
+Оптимизированное решение (Выполнение заняло 0.00390625 Mib)
+"""
