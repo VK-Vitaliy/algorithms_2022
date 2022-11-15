@@ -14,3 +14,24 @@
 
 сделайте замеры на массивах длиной 10, 100, 1000 элементов
 """
+import random
+from timeit import timeit
+
+
+def find_median(m):
+    array = [random.randint(-100, 100) for _ in range(2 * m + 1)]
+    for i in range(m):
+        array.remove(max(array))
+    return max(array)
+
+
+print(timeit("find_median(10)", globals=globals(), number=100))
+print(timeit("find_median(100)", globals=globals(), number=100))
+print(timeit("find_median(1000)", globals=globals(), number=100))
+
+"""
+Результаты замеров:
+0.0013221999979577959
+0.025667399997473694
+1.7396555000013905
+"""
