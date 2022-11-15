@@ -16,3 +16,29 @@
 
 В конце сделайте аналитику какой трех из способов оказался эффективнее
 """
+from statistics import median
+import random
+from timeit import timeit
+
+
+def find_median(m):
+    array = [random.randint(-100, 100) for _ in range(2 * m + 1)]
+    return median(array)
+
+
+print(timeit("find_median(10)", globals=globals(), number=100))
+print(timeit("find_median(100)", globals=globals(), number=100))
+print(timeit("find_median(1000)", globals=globals(), number=100))
+
+"""
+Результаты замеров:
+0.001076499989721924
+0.00986910000210628
+0.09990789998846594
+"""
+
+"""
+ВЫВОДЫ:
+Из трех вариантов нахождения медианы массива, встроенная функция median библиотеки statistics показала самые лучшие
+результаты по замерам времени исполнения.
+"""

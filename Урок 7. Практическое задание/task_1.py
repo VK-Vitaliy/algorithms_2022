@@ -18,3 +18,56 @@
 Подсказка: обратите внимание, сортируем не по возрастанию, как в примере,
 а по убыванию.
 """
+
+import random
+from timeit import timeit
+
+size = 10
+array = [random.randint(-100, 100) for i in range(size)]
+
+
+def bubble_sort(a):
+    """
+    Стандартный подход
+    Сортировка "пузырьком" одномерного целочисленного массива по убыванию
+    """
+    n = 1
+    while n < len(a):
+        for i in range(len(a) - n):
+            if a[i] < a[i + 1]:
+                a[i], a[i + 1] = a[i + 1], a[i]
+        n += 1
+    return a
+
+
+print(timeit("bubble_sort(array[:])", globals=globals(), number=10000))
+
+
+def bubble_sort2(a):
+    """
+    Доработанный подход. Если за проход по списку
+    не совершается ни одной сортировки, то завершение
+    """
+    n = 1
+    flag = True
+    while n < len(a):
+        for i in range(len(a) - n):
+            if a[i] < a[i + 1]:
+                a[i], a[i + 1] = a[i + 1], a[i]
+                flag = False
+        if flag:
+            break
+
+        n += 1
+    return a
+
+
+print(timeit("bubble_sort2(array[:])", globals=globals(), number=10000))
+
+"""
+ВЫВОДЫ:
+bubble_sort - 0.04424260000814684
+bubble_sort2 - 0.04312729999946896
+Оптимизированный метод не показывает хороших результатов с массивами случайных чисел. Доработанная функция будет
+эффективна, только если большая часть массива или весь массив уже отсортирован.
+"""
