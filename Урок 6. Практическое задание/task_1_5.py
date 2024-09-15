@@ -30,3 +30,66 @@
 
 Это файл для пятого скрипта
 """
+
+"""
+Задание с курса "Основы языка Python".
+Написать функцию thesaurus_adv(), принимающую в качестве аргументов строки
+в формате «Имя Фамилия» и возвращающую словарь, в котором ключи — первые буквы фамилий,
+а значения — словари, содержащие записи в которых фамилия начинается с соответствующей буквы.
+"""
+from memory_profiler import memory_usage
+from json import dumps
+
+
+def memory(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(*args)
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        print(f"Выполнение заняло {mem_diff} Mib")
+        return res
+
+    return wrapper
+
+
+# Исходное решение
+@memory
+def thesaurus_adv1(*args):
+    person_dict = {}
+    for i in args:
+        first_name, second_name = i.split()
+        if not person_dict.get((second_name[0])):
+            person_dict[second_name[0]] = {first_name[0]: [i]}
+        elif not person_dict[second_name[0]].get(first_name[0]):
+            person_dict[second_name[0]][first_name[0]] = [i]
+        else:
+            person_dict[second_name[0]][first_name[0]].append(i)
+    return person_dict
+
+
+# Оптимизированное решение - сериализация
+@memory
+def thesaurus_adv2(*args):
+    person_dict = {}
+    for i in args:
+        first_name, second_name = i.split()
+        if not person_dict.get((second_name[0])):
+            person_dict[second_name[0]] = {first_name[0]: [i]}
+        elif not person_dict[second_name[0]].get(first_name[0]):
+            person_dict[second_name[0]][first_name[0]] = [i]
+        else:
+            person_dict[second_name[0]][first_name[0]].append(i)
+    return dumps(person_dict)
+
+
+thesaurus_adv1("Иван Сергеев", "Инна Серова", "Петр Алексеев", "Илья Иванов", "Анна Савельева")
+thesaurus_adv2("Иван Сергеев", "Инна Серова", "Петр Алексеев", "Илья Иванов", "Анна Савельева")
+
+"""
+Аналитика:
+Для оптимизации памяти я использовал сериализацию словаря в формат json-строк, 
+в результате чего удалось добиться уменьшения расхода памяти
+Исходное решение (Выполнение заняло 0.0234375 Mib)
+Оптимизированное решение (0.01171875 Mib)
+"""
